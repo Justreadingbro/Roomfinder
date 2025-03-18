@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoomFinder - Student Accommodation</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            padding: 0.5rem 1rem;
+            margin-left: 20px;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        .hero {
+            height: 500px;
+            background: url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267') no-repeat center center/cover;
+            position: relative;
+            margin: 2rem 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .search-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .search-group select,
+        .search-group input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--light);
+            border-radius: 4px;
+        }
+
+        .gender-toggle {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .gender-toggle button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 20px;
+            width: 500px;
+            border-radius: 10px;
+        }
+
+        .form-group {
+            margin: 15px 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--light);
+            border-radius: 4px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--accent);
+            color: white;
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                height: 300px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .modal-content {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">RoomFinder</div>
+                <div class="nav-links">
+                    <a href="#">Home</a>
+                    <a href="#">Listings</a>
+                    <a href="#">About</a>
+                    <button class="btn btn-primary" onclick="openModal('loginModal')">Login</button>
+                    <button class="btn btn-danger" onclick="openModal('signupModal')">Sign Up</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Find Your Perfect Student Accommodation</h1>
+            <div class="search-box">
+                <div class="search-group">
+                    <input type="text" placeholder="Location">
+                    <select>
+                        <option>Room Type</option>
+                        <option>Single</option>
+                        <option>Shared</option>
+                    </select>
+                    <input type="number" placeholder="Max Budget">
+                </div>
+                <button class="btn btn-primary" style="width: 100%;">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="gender-toggle">
+            <button class="btn btn-primary active" onclick="showGender('male')">Male</button>
+            <button class="btn btn-danger" onclick="showGender('female')">Female</button>
+        </div>
+
+        <section class="listings">
+            <div class="card">
+                <div class="card-header">
+                    <img src="https://images.unsplash.com/photo-1585411434193-0fd500c7b0e4" alt="Room" style="width: 100%; height: 200px; object-fit: cover; border-radius: 5px;">
+                </div>
+                <div class="card-body">
+                    <h3>Cozy Single Room</h3>
+                    <p>📍 123 University Ave</p>
+                    <div class="details">
+                        <p>₨15,000/month</p>
+                        <p>Food: Included</p>
+                        <p>WiFi: Yes</p>
+                    </div>
+                    <button class="btn btn-primary">View Details</button>
+                </div>
+            </div>
+
+            <div class="card female-listing">
+                <div class="card-header">
+                    <img src="https://images.unsplash.com/photo-1554995207-2a8988d3b59a" alt="Room" style="width: 100%; height: 200px; object-fit: cover; border-radius: 5px;">
+                </div>
+                <div class="card-body">
+                    <h3>Shared PG for Girls</h3>
+                    <p>📍 456 College Street</p>
+                    <div class="details">
+                        <p>₨12,000/month</p>
+                        <p>Food: 3 Meals</p>
+                        <p>WiFi: 100Mbps</p>
+                    </div>
+                    <button class="btn btn-danger">View Details</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 RoomFinder. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span onclick="closeModal('loginModal')" style="float: right; cursor: pointer;">&times;</span>
+            <h2>Login</h2>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Enter password">
+            </div>
+            <button class="btn btn-primary">Login</button>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span onclick="closeModal('signupModal')" style="float: right; cursor: pointer;">&times;</span>
+            <h2>Sign Up</h2>
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" placeholder="Enter name">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" placeholder="Enter password">
+            </div>
+            <div class="form-group">
+                <label>Role</label>
+                <select>
+                    <option>Student</option>
+                    <option>Owner</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <select>
+                    <option>Male</option>
+                    <option>Female</option>
+                </select>
+            </div>
+            <button class="btn btn-danger">Sign Up</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showGender(gender) {
+            document.querySelectorAll('.gender-toggle button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.gender-toggle button:nth-child(${gender === 'male' ? 1 : 2})`).classList.add('active');
+
+            document.querySelectorAll('.card').forEach(card => {
+                if(gender === 'male' && card.classList.contains('female-listing')) {
+                    card.style.display = 'none';
+                } else if(gender === 'female' && !card.classList.contains('female-listing')) {
+                    card.style.display = 'none';
+                } else {
+                    card.style.display = 'block';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
